@@ -1,14 +1,29 @@
 {
   "name": "aws-param-store",
   "version": "1.0.0",
-  "description": "",
+  "description": "Library for loading parameters from AWS Parameter Store",
+  "keywords": [
+    "AWS",
+    "SSM",
+    "secret",
+    "parameter store",
+    "parameter",
+    "store"
+  ],
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha --recursive",
+    "coverage": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec --recursive"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Vandium Software Inc.",
+  "license": "BSD-3-Clause",
   "dependencies": {
     "aws-sdk": "^2.107.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.0",
+    "sinon": "^3.2.1"
   }
 }
