@@ -18,6 +18,8 @@ describe( 'lib/index', function() {
     beforeEach( function() {
 
         ParameterQueryInstance = {};
+        ParameterQueryInstance.path = sinon.stub().returns( ParameterQueryInstance );
+
         ParameterQueryStub = sinon.stub().returns( ParameterQueryInstance );
 
         index = proxyquire( '../../lib/index', {
@@ -34,7 +36,8 @@ describe( 'lib/index', function() {
 
             expect( query ).to.equal( ParameterQueryInstance );
             expect( ParameterQueryStub.calledWithNew() ).to.be.true;
-            expect( ParameterQueryStub.firstCall.args ).to.eql( [{ Path: '/' }] );
+            expect( ParameterQueryInstance.path.calledOnce ).to.be.true;
+            expect( ParameterQueryInstance.path.firstCall.args ).to.eql( ['/'] );
         });
 
         it( 'custom path', function() {
@@ -43,7 +46,8 @@ describe( 'lib/index', function() {
 
             expect( query ).to.equal( ParameterQueryInstance );
             expect( ParameterQueryStub.calledWithNew() ).to.be.true;
-            expect( ParameterQueryStub.firstCall.args ).to.eql( [{ Path: '/my-service' }] );
+            expect( ParameterQueryInstance.path.calledOnce ).to.be.true;
+            expect( ParameterQueryInstance.path.firstCall.args ).to.eql( ['/my-service'] );
         });
     });
 });
