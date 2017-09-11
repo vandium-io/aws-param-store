@@ -20,6 +20,8 @@ Install via npm.
 
 	npm install aws-param-store --save
 
+**Note**: `aws-param-store` does not contain a dependency on `aws-sdk` and it should be installed within your application.
+
 ## Getting Started
 
 ```js
