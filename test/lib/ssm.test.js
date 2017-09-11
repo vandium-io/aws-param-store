@@ -8,7 +8,7 @@ const proxyquire = require( 'proxyquire' );
 
 const sinon = require( 'sinon' );
 
-describe( 'lib/index', function() {
+describe( 'lib/ssm', function() {
 
     let SSM;
 
