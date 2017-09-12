@@ -1,13 +1,3 @@
-test
-
-test-other
-
-coverage
-
-examples
-
-.travis.yml
-
-.jshintrc
-
-.istanbul.yml
+*
+!lib/**
+!LICENSE
