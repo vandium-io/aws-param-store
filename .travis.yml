@@ -4,4 +4,5 @@ node_js:
 install:
   - nvm use 6.10
   - npm install
+  - npm install mocha -g
 script: npm run coverage

@@ -15,6 +15,13 @@
     "test": "./node_modules/.bin/mocha --recursive",
     "coverage": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec --recursive"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vandium-io/aws-param-store.git"
+  },
+  "engines": {
+    "node": ">=6.10"
+  },
   "author": "Vandium Software Inc.",
   "license": "BSD-3-Clause",
   "dependencies": {
@@ -23,7 +30,6 @@
     "aws-sdk": "^2.107.0",
     "chai": "^4.1.2",
     "istanbul": "^0.4.5",
-    "mocha": "^3.5.0",
     "proxyquire": "^1.8.0",
     "sinon": "^3.2.1"
   }
