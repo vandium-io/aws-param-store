@@ -12,8 +12,8 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --recursive",
-    "coverage": "./node_modules/.bin/istanbul cover node_modules/mocha/bin/_mocha -- -R spec --recursive"
+    "test": "mocha --recursive",
+    "coverage": "./node_modules/.bin/istanbul cover _mocha -- -R spec --recursive"
   },
   "repository": {
     "type": "git",
