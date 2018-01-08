@@ -44,7 +44,17 @@ describe( 'lib/ssm', function() {
                 expect( instance ).to.exist;
                 expect( AWSStub.SSM.calledOnce ).to.be.true;
                 expect( AWSStub.SSM.calledWithNew() ).to.be.true;
-                expect( AWSStub.SSM.firstCall.args ).to.eql( [] );
+                expect( AWSStub.SSM.firstCall.args ).to.eql( [ undefined ] );
+            });
+
+            it( 'with options', function() {
+
+                let instance = new SSM( { region: 'us-east-1' } );
+
+                expect( instance ).to.exist;
+                expect( AWSStub.SSM.calledOnce ).to.be.true;
+                expect( AWSStub.SSM.calledWithNew() ).to.be.true;
+                expect( AWSStub.SSM.firstCall.args ).to.eql( [ { region: 'us-east-1' } ] );
             });
         });
 

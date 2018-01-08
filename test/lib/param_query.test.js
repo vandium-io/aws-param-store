@@ -41,20 +41,25 @@ describe( 'lib/param_query', function() {
 
         describe( 'constructor', function() {
 
-            it( 'normal operation (default parameters)', function() {
+            it( 'normal operation (default options)', function() {
 
                 let instance = new ParameterQuery();
 
                 expect( instance._params ).to.exist;
                 expect( instance._params ).to.eql( { Path: '/', Recursive: true, WithDecryption: true } );
+
+                expect( instance._options ).to.eql( {} );
             });
 
-            it( 'custom parameters', function() {
+            it( 'custom options', function() {
 
-                let instance = new ParameterQuery( { Path: '/my-path', one: 1 } );
+                let instance = new ParameterQuery( { region: 'us-east-1' } );
 
                 expect( instance._params ).to.exist;
-                expect( instance._params ).to.eql( { Path: '/my-path',one: 1 } );
+                expect( instance._params ).to.eql( { Path: '/', Recursive: true, WithDecryption: true } );
+
+                expect( instance._options ).to.exist;
+                expect( instance._options ).to.eql( { region: 'us-east-1' } );
             });
         });
 
