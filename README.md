@@ -35,6 +35,20 @@ awsParamStore.newQuery( '/project1/service1/production' )
     });
 ```
 
+If your AWS region is not set in your environment variables, then it can be set programmatically by supplying
+options when calling `newQuery()`:
+
+```js
+const awsParamStore = require( 'aws-param-store' );
+
+awsParamStore.newQuery( '/project1/service1/production', { region: 'us-east-1' } )
+    .execute()
+    .then( (parameters) => {
+
+        // set env vars from here
+    });
+```
+
 ## Feedback
 
 We'd love to get feedback on how to make this tool better. Feel free to contact us at `feedback@vandium.io`
