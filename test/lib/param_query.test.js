@@ -20,7 +20,7 @@ describe( 'lib/param_query', function() {
 
         SSMInstance = {
 
-            getParameters: sinon.stub().returns( Promise.resolve( [] ) )
+            getParametersByPath: sinon.stub().returns( Promise.resolve( [] ) )
         };
 
         SSMStub = sinon.stub().returns( SSMInstance );
@@ -141,8 +141,8 @@ describe( 'lib/param_query', function() {
 
                         expect( SSMStub.calledOnce ).to.be.true;
                         expect( SSMStub.calledWithNew() ).to.be.true;
-                        expect( SSMInstance.getParameters.calledOnce ).to.be.true;
-                        expect( SSMInstance.getParameters.firstCall.args ).to.eql( [ { Path: '/', Recursive: true, WithDecryption: true }] );
+                        expect( SSMInstance.getParametersByPath.calledOnce ).to.be.true;
+                        expect( SSMInstance.getParametersByPath.firstCall.args ).to.eql( [ { Path: '/', Recursive: true, WithDecryption: true }] );
                     });
             });
         });
@@ -156,10 +156,7 @@ describe( 'lib/param_query', function() {
                     stdout: JSON.stringify( {
 
                         success: true,
-                        result: {
-
-                            parameters: [ { Name: 'Param1' }, { Name: 'Param2' } ]
-                        }
+                        result: [ { Name: 'Param1' }, { Name: 'Param2' } ]
                     })
                 };
 
@@ -169,6 +166,8 @@ describe( 'lib/param_query', function() {
 
                 expect( result ).to.exist;
                 expect( result ).to.be.an( 'Array' );
+
+
                 expect( result ).to.eql( [ { Name: 'Param1' }, {  Name: 'Param2' } ] );
             });
 

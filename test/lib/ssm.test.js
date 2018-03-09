@@ -58,7 +58,7 @@ describe( 'lib/ssm', function() {
             });
         });
 
-        describe( '.getParameters', function() {
+        describe( '.getParametersByPath', function() {
 
             it( 'normal operation', function() {
 
@@ -77,7 +77,7 @@ describe( 'lib/ssm', function() {
 
                 let instance = new SSM();
 
-                return instance.getParameters( { Path: '/' } )
+                return instance.getParametersByPath( { Path: '/' } )
                     .then( (parameters) => {
 
                         expect( parameters ).to.not.equal( response.Parameters );
@@ -119,7 +119,7 @@ describe( 'lib/ssm', function() {
 
                 let instance = new SSM();
 
-                return instance.getParameters( { Path: '/' } )
+                return instance.getParametersByPath( { Path: '/' } )
                     .then( (parameters) => {
 
                         expect( parameters ).to.eql( [ { Name: 'Param1' }, { Name: 'Param2' } ] );
@@ -141,7 +141,7 @@ describe( 'lib/ssm', function() {
 
                 let instance = new SSM();
 
-                return instance.getParameters( { Path: '/' } )
+                return instance.getParametersByPath( { Path: '/' } )
                     .then( (parameters) => {
 
                         expect( parameters ).to.eql( [] );
