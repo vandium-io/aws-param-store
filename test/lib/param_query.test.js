@@ -73,6 +73,32 @@ describe( 'lib/param_query', function() {
                 expect( result ).to.equal( instance );
 
                 expect( instance._params ).to.eql( { Path: '/my-service', Recursive: true, WithDecryption: true } );
+                expect( instance._call ).to.equal( 'getParametersByPath' );
+            });
+        });
+
+        describe( '.named', function() {
+
+            it( 'single name', function() {
+
+                let instance = new ParameterQuery();
+
+                let result = instance.named( 'the-param' );
+                expect( result ).to.equal( instance );
+
+                expect( instance._params ).to.eql( { Name: 'the-param', WithDecryption: true } );
+                expect( instance._call ).to.equal( 'getParameter' );
+            });
+
+            it( 'array of names', function() {
+
+                let instance = new ParameterQuery();
+
+                let result = instance.named( [ 'param1', 'param2' ] );
+                expect( result ).to.equal( instance );
+
+                expect( instance._params ).to.eql( { Names: [ 'param1', 'param2' ], WithDecryption: true } );
+                expect( instance._call ).to.equal( 'getParameters' );
             });
         });
 
