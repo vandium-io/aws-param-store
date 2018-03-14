@@ -8,7 +8,7 @@ const proxyquire = require( 'proxyquire' );
 
 const sinon = require( 'sinon' );
 
-xdescribe( 'lib/param_query_sync', function() {
+describe( 'lib/ssm_sync', function() {
 
     let capturedConsoleLog;
 
@@ -30,9 +30,14 @@ xdescribe( 'lib/param_query_sync', function() {
 
         let SSMStub = sinon.stub().returns( SSMInstance );
 
-        let inputParams = [  { Path: '/', Recursive: true, WithDecryption: true }, undefined ];
+        let input = {
 
-        process.stdin.push( JSON.stringify( inputParams ) + '\r\n' );
+            options: null,
+            funcName: 'getParametersByPath',
+            parameters: [{ Path: '/', Recursive: true, WithDecryption: true }]
+        };
+
+        process.stdin.push( JSON.stringify( [input] ) + '\r\n' );
 
         capturedConsoleLog = console.log;
 
@@ -43,9 +48,12 @@ xdescribe( 'lib/param_query_sync', function() {
 
             try {
 
+                expect( SSMStub.calledOnce ).to.be.true;
+                expect( SSMStub.firstCall.calledWithNew() ).to.be.true;
+
                 expect( SSMInstance.getParametersByPath.calledOnce ).to.be.true;
-                expect( SSMInstance.getParametersByPath.firstCall.args[0] ).to.eql( { Path: '/', Recursive: true, WithDecryption: true } );
-                expect( args[0] ).to.equal( JSON.stringify( {"success":true,"result":{"parameters":[{"Name":"Param1"},{"Name":"Param2"}]}} ) );
+                expect( SSMInstance.getParametersByPath.firstCall.args ).to.eql( [{ Path: '/', Recursive: true, WithDecryption: true }] );
+                expect( args[0] ).to.equal( JSON.stringify( {"success":true,"result":[{"Name":"Param1"},{"Name":"Param2"}]} ) );
                 done();
             }
             catch( err ) {
@@ -54,7 +62,7 @@ xdescribe( 'lib/param_query_sync', function() {
             }
         };
 
-        proxyquire( '../../lib/param_query_sync', {
+        proxyquire( '../../lib/ssm_sync', {
 
 
             './ssm': SSMStub
@@ -70,9 +78,14 @@ xdescribe( 'lib/param_query_sync', function() {
 
         let SSMStub = sinon.stub().returns( SSMInstance );
 
-        let inputParams = [  { Path: '/', Recursive: true, WithDecryption: true }, undefined ];
+        let input = {
 
-        process.stdin.push( JSON.stringify( inputParams ) + '\r\n' );
+            options: null,
+            funcName: 'getParametersByPath',
+            parameters: [{ Path: '/', Recursive: true, WithDecryption: true }]
+        };
+
+        process.stdin.push( JSON.stringify( [input] ) + '\r\n' );
 
         capturedConsoleLog = console.log;
 
@@ -84,7 +97,7 @@ xdescribe( 'lib/param_query_sync', function() {
             try {
 
                 expect( SSMInstance.getParametersByPath.calledOnce ).to.be.true;
-                expect( SSMInstance.getParametersByPath.firstCall.args[0] ).to.eql( { Path: '/', Recursive: true, WithDecryption: true } );
+                expect( SSMInstance.getParametersByPath.firstCall.args ).to.eql( [{ Path: '/', Recursive: true, WithDecryption: true }] );
                 expect( args[0] ).to.equal( JSON.stringify( {"success":false,"err":{"message":"bang"}} ) );
                 done();
             }
@@ -94,7 +107,7 @@ xdescribe( 'lib/param_query_sync', function() {
             }
         };
 
-        proxyquire( '../../lib/param_query_sync', {
+        proxyquire( '../../lib/ssm_sync', {
 
             './ssm': SSMStub
         });
@@ -109,9 +122,14 @@ xdescribe( 'lib/param_query_sync', function() {
 
         let SSMStub = sinon.stub().returns( SSMInstance );
 
-        let inputParams = [  { Path: '/', Recursive: true, WithDecryption: true }, undefined ];
+        let input = {
 
-        process.stdin.push( JSON.stringify( inputParams ) + '\r\n' );
+            options: null,
+            funcName: 'getParametersByPath',
+            parameters: [{ Path: '/', Recursive: true, WithDecryption: true }]
+        };
+
+        process.stdin.push( JSON.stringify( [input] ) + '\r\n' );
 
         capturedConsoleLog = console.log;
 
@@ -123,7 +141,7 @@ xdescribe( 'lib/param_query_sync', function() {
             try {
 
                 expect( SSMInstance.getParametersByPath.calledOnce ).to.be.true;
-                expect( SSMInstance.getParametersByPath.firstCall.args[0] ).to.eql( { Path: '/', Recursive: true, WithDecryption: true } );
+                expect( SSMInstance.getParametersByPath.firstCall.args ).to.eql( [{ Path: '/', Recursive: true, WithDecryption: true }] );
                 expect( args[0] ).to.equal( JSON.stringify( {"success":false,"err":{"message":"bang"}} ) );
                 done();
             }
@@ -133,7 +151,7 @@ xdescribe( 'lib/param_query_sync', function() {
             }
         };
 
-        proxyquire( '../../lib/param_query_sync', {
+        proxyquire( '../../lib/ssm_sync', {
 
             './ssm': SSMStub
         });

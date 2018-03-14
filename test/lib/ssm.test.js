@@ -17,10 +17,7 @@ describe( 'lib/ssm', function() {
 
     beforeEach( function() {
 
-        SSMStub = {
-
-            getParametersByPath: sinon.stub()
-        };
+        SSMStub = {};
 
         AWSStub = {
 
@@ -59,6 +56,11 @@ describe( 'lib/ssm', function() {
         });
 
         describe( '.getParametersByPath', function() {
+
+            beforeEach( function() {
+
+                SSMStub.getParametersByPath = sinon.stub();
+            });
 
             it( 'normal operation', function() {
 
@@ -148,6 +150,72 @@ describe( 'lib/ssm', function() {
 
                         expect( SSMStub.getParametersByPath.calledOnce ).to.be.true;
                         expect( SSMStub.getParametersByPath.firstCall.args ).to.eql( [ { Path: '/' } ] );
+                    });
+            });
+        });
+
+        describe( '.getParameter', function() {
+
+            beforeEach( function() {
+
+                SSMStub.getParameter = sinon.stub();
+            });
+
+            it( 'normal operation', function() {
+
+                let response = {
+
+                    Parameter: { Name: 'Param1' }
+                };
+
+                SSMStub.getParameter.returns( {
+
+                    promise: sinon.stub().returns( Promise.resolve( response ) )
+                });
+
+                let instance = new SSM();
+
+                return instance.getParameter( { Name: 'Param1' } )
+                    .then( (parameter) => {
+
+                        expect( parameter ).to.equal( response.Parameter );
+
+                        expect( SSMStub.getParameter.calledOnce ).to.be.true;
+                        expect( SSMStub.getParameter.firstCall.args ).to.eql( [ { Name: 'Param1' } ] );
+                    });
+            });
+        });
+
+        describe( '.getParameters', function() {
+
+            beforeEach( function() {
+
+                SSMStub.getParameters = sinon.stub();
+            });
+
+            it( 'normal operation', function() {
+
+                let response = {
+
+                    Parameters: [{ Name: 'Param1'}],
+                    InvalidParameters: [ 'Param2' ]
+                };
+
+                SSMStub.getParameters.returns( {
+
+                    promise: sinon.stub().returns( Promise.resolve( response ) )
+                });
+
+                let instance = new SSM();
+
+                return instance.getParameters( { Names: [ 'Param1', 'Param2' ] } )
+                    .then( (results) => {
+
+                        expect( results ).to.not.equal( response );
+                        expect( results ).to.eql( response );
+
+                        expect( SSMStub.getParameters.calledOnce ).to.be.true;
+                        expect( SSMStub.getParameters.firstCall.args ).to.eql( [ { Names: [ 'Param1', 'Param2' ] } ] );
                     });
             });
         });
