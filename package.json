@@ -15,7 +15,7 @@
     "test": "nyc mocha --recursive"
   },
   "nyc": {
-    "check-coverage": false,
+    "check-coverage": true,
     "include": [
       "lib/**/*.js"
     ],
