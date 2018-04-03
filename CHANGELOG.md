@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.0.0 (2018-04-03)
+
+New:
+
+* Added methods to simplify query by path
+* Added methods to query by parameter name(s). Thanks @roribio
+
+Internal:
+
+* Streamlined code for making AWS sync/async calls
+
+
 ## 1.1.0 (2018-01-08)
 
 Improved:
