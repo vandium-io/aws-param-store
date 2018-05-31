@@ -37,6 +37,3 @@ npm-debug.log
 
 # Mac specific
 .DS_Store
-
-# Build
-lib
