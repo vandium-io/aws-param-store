@@ -1,6 +1,6 @@
 {
   "name": "aws-param-store",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Library for loading parameters from AWS Parameter Store",
   "keywords": [
     "AWS",
@@ -36,11 +36,11 @@
   "dependencies": {
   },
   "devDependencies": {
-    "aws-sdk": "^2.107.0",
+    "aws-sdk": "^2.325.0",
     "chai": "^4.1.2",
-    "proxyquire": "^1.8.0",
-    "mocha": "^4.0.1",
-    "nyc": "^11.3.0",
-    "sinon": "^4.0.0"
+    "proxyquire": "^2.1.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "sinon": "^6.3.4"
   }
 }
