@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.1.0 (2018-09-30)
+
+Updated:
+
+* Add alternative output for SSM error condition. Thanks @aaronfay
+
+Internal:
+
+* Updated test dependencies
+
+
 ## 2.0.0 (2018-04-03)
 
 New:
