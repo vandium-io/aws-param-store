@@ -197,7 +197,7 @@ describe( 'lib/param_query', function() {
                 expect( result ).to.eql( [ { Name: 'Param1' }, {  Name: 'Param2' } ] );
             });
 
-            it( 'fail: when error occurs', function() {
+            it( 'fail: when error occurs, exception has message', function() {
 
                 let resultStub = {
 
@@ -222,6 +222,34 @@ describe( 'lib/param_query', function() {
                 catch( err ) {
 
                     expect( err.message ).to.equal( 'failed' );
+                }
+            });
+
+            it( 'fail: when error occurs, exception message is null and code exists', function() {
+
+                let resultStub = {
+
+                    stdout: JSON.stringify( {
+
+                        success: false,
+                        err: {
+
+                            code: 'ParameterNotFound'
+                        }
+                    })
+                };
+
+                childProcessStub.spawnSync.returns( resultStub );
+
+                try {
+
+                    new ParameterQuery().executeSync();
+
+                    throw new Error( 'should not be successful' );
+                }
+                catch( err ) {
+
+                    expect( err.message ).to.equal( 'ParameterNotFound' );
                 }
             });
         });
