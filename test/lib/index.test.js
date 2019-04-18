@@ -268,6 +268,71 @@ describe( 'lib/index', function() {
         });
     });
 
+    describe( '.putParameter', function() {
+
+        const RETURN_DATA = {
+
+            Version: 1
+        };
+
+        beforeEach( function() {
+
+            ParameterQueryInstance.put = sinon.stub().returns( ParameterQueryInstance );
+            ParameterQueryInstance.withValue = sinon.stub().returns( ParameterQueryInstance );
+            ParameterQueryInstance.type = sinon.stub().returns( ParameterQueryInstance );
+            ParameterQueryInstance.execute = sinon.stub().returns( Promise.resolve( RETURN_DATA ) );
+        });
+
+        it( 'name only', function() {
+
+            return index.putParameter( '/my-parameter', 'my-value', 'String')
+                .then( (results) => {
+
+                    expect( ParameterQueryStub.calledOnce ).to.be.true;
+                    expect( ParameterQueryStub.firstCall.args ).to.eql( [ undefined ] );
+
+                    expect( ParameterQueryInstance.put.calledOnce ).to.be.true;
+                    expect( ParameterQueryInstance.withValue.calledOnce ).to.be.true;
+                    expect( ParameterQueryInstance.type.calledOnce ).to.be.true;
+
+                    expect( results ).to.equal( RETURN_DATA );
+                });
+        });
+
+    });
+
+    describe( '.putParameterSync', function() {
+
+        const RETURN_DATA = {
+
+            Version: 1
+        };
+
+        beforeEach( function() {
+
+            ParameterQueryInstance.put = sinon.stub().returns( ParameterQueryInstance );
+            ParameterQueryInstance.withValue = sinon.stub().returns( ParameterQueryInstance );
+            ParameterQueryInstance.type = sinon.stub().returns( ParameterQueryInstance );
+            ParameterQueryInstance.executeSync = sinon.stub().returns( RETURN_DATA );
+        });
+
+        it( 'name only', function() {
+
+            let results = index.putParameterSync( '/my-parameter', 'my-value', 'String');
+
+            expect( ParameterQueryStub.calledOnce ).to.be.true;
+            expect( ParameterQueryStub.firstCall.args ).to.eql( [ undefined ] );
+
+            expect( ParameterQueryInstance.put.calledOnce ).to.be.true;
+            expect( ParameterQueryInstance.withValue.calledOnce ).to.be.true;
+            expect( ParameterQueryInstance.type.calledOnce ).to.be.true;
+
+            expect( results ).to.equal( RETURN_DATA );
+        });
+
+    });
+
+
     describe( '.newQuery (legacy)', function() {
 
         beforeEach( function() {

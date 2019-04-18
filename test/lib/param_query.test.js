@@ -156,6 +156,62 @@ describe( 'lib/param_query', function() {
             });
         });
 
+        describe( '.type', function() {
+
+            it( 'normal operation', function() {
+
+                let instance = new ParameterQuery();
+                expect( instance._params.Type ).to.be.undefined;
+
+                var invalidTypeFn = function () {
+                    let instance = new ParameterQuery();
+                    instance.type('BadType');
+                }
+                expect( invalidTypeFn ).to.throw('BadType');
+
+                instance.type('StringList');
+                expect( instance._params.Type ).to.eq('StringList');
+            });
+        });
+
+        describe( '.put', function() {
+
+            it( 'normal operation', function() {
+
+                let instance = new ParameterQuery();
+
+                instance.put('key1');
+                expect(instance._call).to.eq('putParameter')
+                expect(instance._params.Name).to.eq('key1')
+                expect(instance._params.Overwrite).to.eq(true)
+
+                expect(instance._params.Path).to.be.undefined;
+                expect(instance._params.WithDecryption).to.be.undefined;
+                expect(instance._params.Recursive).to.be.undefined;
+            });
+
+            it( 'Overwrite false operation', function() {
+
+                let instance = new ParameterQuery({Overwrite: false});
+                expect(instance._params.Overwrite).to.be.undefined;
+
+                instance.put('key1');
+                expect(instance._params.Overwrite).to.eq(false)
+            });
+        });
+
+        describe( '.withValue', function() {
+
+            it( 'normal operation', function() {
+
+                let instance = new ParameterQuery();
+                expect( instance._params.Value ).to.be.undefined;
+
+                instance.withValue('someValue');
+                expect( instance._params.Value ).to.eq('someValue');
+            });
+        });
+
         describe( '.execute', function() {
 
             it( 'normal operation', function() {

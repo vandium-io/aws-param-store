@@ -69,6 +69,54 @@ describe( 'lib/ssm_sync', function() {
         });
     });
 
+    it( 'successful Put execution', function( done ) {
+
+        let SSMInstance = {
+
+            putParameter: sinon.stub().returns( Promise.resolve( [ { Version: 1 } ] ) )
+        };
+
+        let SSMStub = sinon.stub().returns( SSMInstance );
+
+        let input = {
+
+            options: null,
+            funcName: 'putParameter',
+            parameters: [{ Name: 'Param1', 'Value': 'Value1' }]
+        };
+
+        process.stdin.push( JSON.stringify( [input] ) + '\r\n' );
+
+        capturedConsoleLog = console.log;
+
+        console.log = ( ...args ) => {
+
+            console.log = capturedConsoleLog;
+            capturedConsoleLog = null;
+
+            try {
+
+                expect( SSMStub.calledOnce ).to.be.true;
+                expect( SSMStub.firstCall.calledWithNew() ).to.be.true;
+
+                expect( SSMInstance.putParameter.calledOnce ).to.be.true;
+                expect( SSMInstance.putParameter.firstCall.args ).to.eql( [{ Name: 'Param1', 'Value': 'Value1' }] );
+                expect( args[0] ).to.equal( JSON.stringify( {"success":true,"result":[{"Version":1}]} ) );
+                done();
+            }
+            catch( err ) {
+
+                done( err );
+            }
+        };
+
+        proxyquire( '../../lib/ssm_sync', {
+
+
+            './ssm': SSMStub
+        });
+    });
+
     it( 'fail: when SSM throws error', function( done ) {
 
         let SSMInstance = {

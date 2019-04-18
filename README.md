@@ -151,6 +151,31 @@ let parameters = awsParamStore.getParametersByPathSync( '/project1' );
 // parameters contains an array of parameter objects
 ```
 
+### `putParameter( name, value, type [, options] )`
+
+Puts parameter. This method returns a promise that resolves to the version returned back.
+
+```js
+const awsParamStore = require( 'aws-param-store' );
+
+awsParamStore.putParameter('key', 'value1,value2', 'StringList', {region: 'us-east-1', Overwrite: false})
+    .then( (results) => {
+
+		// results is the version of the value created
+    });
+```
+
+### `putParameterSync( name, value , type [, options]  )`
+
+Puts parameter. This method.  This method will block until the version returned back.
+
+```js
+const awsParamStore = require( 'aws-param-store' );
+
+let results = awsParamStore.putParameterSync('key', 'securedstring', 'SecureString', {region: 'us-east-1'});
+
+```
+
 ### `ParameterQuery`
 
 Instances of `ParameterQuery` can be created by calling `parameterQuery( [options] )`.

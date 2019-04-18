@@ -219,5 +219,84 @@ describe( 'lib/ssm', function() {
                     });
             });
         });
+
+        describe( '.putParameter', function() {
+
+            beforeEach( function() {
+
+                SSMStub.putParameter = sinon.stub();
+            });
+
+            it( 'normal operation (type default: SecuredString) ', function() {
+
+                let response = {
+
+                    Version: 1
+                };
+
+                SSMStub.putParameter.returns( {
+
+                    promise: sinon.stub().returns( Promise.resolve( response ) )
+                });
+
+                let instance = new SSM();
+
+                return instance.putParameter( { Name: 'Param1', Value: 'Value1' } )
+                    .then( (return_data) => {
+                        expect(return_data).to.eql(response)
+
+                        expect( SSMStub.putParameter.calledOnce ).to.be.true;
+                        expect( SSMStub.putParameter.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1' } ] );
+                    });
+            });
+
+            it( 'Type String operation', function() {
+
+                let response = {
+
+                    Version: 1
+                };
+
+                SSMStub.putParameter.returns( {
+
+                    promise: sinon.stub().returns( Promise.resolve( response ) )
+                });
+
+                let instance = new SSM();
+
+                return instance.putParameter( { Name: 'Param1', Value: 'Value1', Type: 'String' } )
+                    .then( (return_data) => {
+                        expect(return_data).to.eql(response)
+
+                        expect( SSMStub.putParameter.calledOnce ).to.be.true;
+                        expect( SSMStub.putParameter.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1', Type: 'String' } ] );
+                    });
+            });
+
+            it( 'Type StringList operation', function() {
+
+                let response = {
+
+                    Version: 1
+                };
+
+                SSMStub.putParameter.returns( {
+
+                    promise: sinon.stub().returns( Promise.resolve( response ) )
+                });
+
+                let instance = new SSM();
+
+                return instance.putParameter( { Name: 'Param1', Value: 'Value1,Value2', Type: 'StringList' } )
+                    .then( (return_data) => {
+                        expect(return_data).to.eql(response)
+
+                        expect( SSMStub.putParameter.calledOnce ).to.be.true;
+                        expect( SSMStub.putParameter.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1,Value2', Type: 'StringList' } ] );
+                    });
+            });
+
+        });
+
     });
 });
