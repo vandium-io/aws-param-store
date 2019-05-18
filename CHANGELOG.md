@@ -1,11 +1,18 @@
 # Change Log
 
-## 3.0.0 (TBD)
+## 3.0.0 (2019-05-19)
 
 New:
 
-* Added `putParameter()` and `putParameterSync`. Thanks @AvnerCohen 
+* Added `putParameter()` and `putParameterSync`. Thanks @AvnerCohen
 
+Updated:
+
+* Requires node 8.10 or higher
+
+Internal:
+
+* Updated test dependencies
 
 ## 2.1.0 (2018-09-30)
 
