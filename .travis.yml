@@ -1,7 +1,7 @@
 language: node_js
 node_js:
-  - "6.10"
+  - "8.10"
 install:
-  - nvm use 6.10
+  - nvm use 8.10
   - npm install
 script: npm test
