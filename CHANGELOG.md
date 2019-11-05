@@ -1,5 +1,16 @@
 # Change Log
 
+## 3.1.0 (2019-11-04)
+
+Updated:
+
+* `aws-sdk` added as a peer dependency
+
+Internal:
+
+* Updated dependencies
+
+
 ## 3.0.0 (2019-05-19)
 
 New:
