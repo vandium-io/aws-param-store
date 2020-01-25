@@ -1,8 +1,6 @@
-'use strict';
+const { putParameter } = require( '..'  /* 'aws-param-store' */ );
 
-let awsParamStore = require( '..'  /* 'aws-param-store' */ );
-
-awsParamStore.putParameter( '/whatever/test/putParameter', 'value1', 'SecureString', { region: 'us-east-1' } )
+putParameter( '/whatever/test/my-parameter', 'value1', 'SecureString', { region: 'us-east-1' } )
     .then( (result) => {
 
         console.log( result );

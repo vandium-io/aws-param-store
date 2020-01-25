@@ -1,5 +1,20 @@
 # Change Log
 
+## 4.0.0 (TBD)
+
+Breaking:
+
+* Node 12 or higher
+
+New:
+
+* Added support for AWS profiles
+* Changed sync implementation to `sync-rpc`
+
+Internal:
+
+* Updated dependencies
+
 ## 3.2.0 (2019-12-04)
 
 Updated:

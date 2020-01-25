@@ -12,9 +12,7 @@ Module for loading parameter-store values from AWS SSM
 * Supports both synchronous and asynchronous querying of parameters
 * Uses Promises for asynchronous calls
 * Can run inside AWS Lambda environment
-* AWS Lambda Node.js 8.10.x compatible
-* Lightweight and does not require additional dependencies other than the AWS-SDK
-
+* AWS Lambda Node.js 12.x compatible
 
 ## Installation
 Install via npm.

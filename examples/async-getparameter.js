@@ -1,8 +1,6 @@
-'use strict';
+const { getParameter } = require( '..'  /* 'aws-param-store' */ );
 
-let awsParamStore = require( '..'  /* 'aws-param-store' */ );
-
-awsParamStore.getParameter( '/whatever/test/getParameter', { region: 'us-east-1' } )
+getParameter( '/whatever/test/my-parameter', { region: 'us-east-1' } )
     .then( (parameter) => {
 
         console.log( parameter );

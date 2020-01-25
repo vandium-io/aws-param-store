@@ -1,6 +1,4 @@
-'use strict';
-
-let awsParamStore = require( '..'  /* 'aws-param-store' */ );
+const awsParamStore = require( '..'  /* 'aws-param-store' */ );
 
 try {
 
