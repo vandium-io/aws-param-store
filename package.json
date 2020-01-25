@@ -16,6 +16,7 @@
     "lint": "eslint lib/*"
   },
   "nyc": {
+    "all": true,
     "check-coverage": true,
     "include": [
       "lib/**/*.js"
