@@ -1,13 +1,15 @@
 {
   "name": "aws-param-store",
   "version": "4.0.0-Beta1",
-  "description": "Library for loading parameters from AWS SSM Parameter Store",
+  "description": "Library for manipulating parameters in the AWS SSM Parameter Store",
   "keywords": [
     "AWS",
     "SSM",
     "secret",
     "parameter store",
     "parameter",
+    "secure",
+    "secrets",
     "store"
   ],
   "main": "lib/index.js",

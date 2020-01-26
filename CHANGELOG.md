@@ -9,11 +9,12 @@ Breaking:
 New:
 
 * Added support for AWS profiles for sync methods
-* Changed sync implementation to `sync-rpc`
+* Changed sync implementation to `sync-rpc` for future stability
 
 Updated:
 
-* `getParameters()` can be used with more the 10 parameters  
+* `getParameters()` can be used with more the 10 parameters
+* Added `overwrite()` for `putParameter` operations
 * If the region is set, it will get used for sync methods
 
 Internal:

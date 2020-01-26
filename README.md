@@ -7,10 +7,11 @@ Module for loading parameter-store values from AWS SSM
 
 ## Features
 * Gets parameters by name(s) or path
+* Update parameters using put operations.
 * Recursively resolves paths and decodes parameters by default
 * Paginates results automatically
 * Supports both synchronous and asynchronous querying of parameters
-* Uses Promises for asynchronous calls
+* Fully async (Promises) and synchronous
 * Can run inside AWS Lambda environment
 * AWS Lambda Node.js 12.x compatible
 
@@ -34,7 +35,7 @@ awsParamStore.getParametersByPath( '/project1/service1/production' )
 ```
 
 If your AWS region is not set in your environment variables, then it can be set programmatically by supplying
-options when calling `newQuery()`:
+options when calling any of the api methods:
 
 ```js
 const awsParamStore = require( 'aws-param-store' );
@@ -57,14 +58,14 @@ to specify specific AWS service options such as the region. All of the
 `getParameter*` methods will request that the values are decoded. If you require
 further control, please use the `parameterQuery()` method.
 
-### `getParameter( name [, options] )`
+### `async getParameter( name [, options] )`
 
 Gets a parameter by name. This method returns a promise that resolves the Parameter.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { getParameter } = require( 'aws-param-store' );
 
-awsParamStore.getParameter( '/project1/my-parameter', { region: 'us-east-1' } )
+getParameter( '/project1/my-parameter', { region: 'us-east-1' } )
     .then( (parameter) => {
 
         // Parameter info object for '/project1/my-parameter'
@@ -76,24 +77,24 @@ awsParamStore.getParameter( '/project1/my-parameter', { region: 'us-east-1' } )
 Gets a parameter by name. This method will block until the operation completes.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { getParameterSync } = require( 'aws-param-store' );
 
-let parameter = awsParamStore.getParameterSync( '/project1/my-parameter',
-											{ region: 'us-east-1' } );
+let parameter = getParameterSync( '/project1/my-parameter',
+																  { region: 'us-east-1' } );
 
 // Parameter info object for '/project1/my-parameter'
 ```
 
 
-### `getParameters( names [, options] )`
+### `async getParameters( names [, options] )`
 
 Gets one or more parameters by name. This method returns a promise that resolves
 an object that contains `Parameters` and `InvalidParameters`.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { getParameters } = require( 'aws-param-store' );
 
-awsParamStore.getParameters( ['/project1/my-parameter1', '/project1/my-parameter2'],
+getParameters( ['/project1/my-parameter1', '/project1/my-parameter2'],
 							 { region: 'us-east-1' } )
     .then( (results) => {
 
@@ -110,25 +111,25 @@ block until the operation completes, and will return an object that contains
 `Parameters` and `InvalidParameters`.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { getParametersSync } = require( 'aws-param-store' );
 
-let results = awsParamStore.getParametersSync( ['/project1/my-parameter1', '/project1/my-parameter2'],
-							     			   { region: 'us-east-1' } );
+let results = getParametersSync( ['/project1/my-parameter1', '/project1/my-parameter2'],
+							     			   			 { region: 'us-east-1' } );
 
 // results.Parameters will contain an array of parameters that were found
 // results.InvalidParameters will contain an array of parameters that were
 //                           not found
 ```
 
-### `getParametersByPath( path [, options] )`
+### `async getParametersByPath( path [, options] )`
 
 Gets parameters by recursively traversing the supplied path. This method returns
 a promise that resolves the parameters that were found.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { getParametersByPath } = require( 'aws-param-store' );
 
-awsParamStore.getParametersByPath( '/project1' )
+getParametersByPath( '/project1' )
     .then( (parameters) => {
 
 		// parameters contains an array of parameter objects
@@ -142,21 +143,21 @@ block until the operation completes, and will return a list of matching
 parameters.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { getParametersByPathSync } = require( 'aws-param-store' );
 
-let parameters = awsParamStore.getParametersByPathSync( '/project1' );
+let parameters = getParametersByPathSync( '/project1' );
 
 // parameters contains an array of parameter objects
 ```
 
-### `putParameter( name, value, type [, options] )`
+### `async putParameter( name, value, type [, options] )`
 
 Puts parameter. This method returns a promise that resolves to the version returned back.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { putParameter } = require( 'aws-param-store' );
 
-awsParamStore.putParameter('key', 'value1,value2', 'StringList', {region: 'us-east-1', Overwrite: false})
+putParameter('key', 'value1,value2', 'StringList', {region: 'us-east-1', Overwrite: false})
     .then( (results) => {
 
 		// results is the version of the value created
@@ -168,9 +169,9 @@ awsParamStore.putParameter('key', 'value1,value2', 'StringList', {region: 'us-ea
 Puts parameter. This method.  This method will block until the version returned back.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const { putParameterSync } = require( 'aws-param-store' );
 
-let results = awsParamStore.putParameterSync('key', 'securedstring', 'SecureString', {region: 'us-east-1'});
+let results = putParameterSync('key', 'securedstring', 'SecureString', {region: 'us-east-1'});
 
 ```
 
@@ -182,34 +183,51 @@ control over how the calls are made to resolve parameters.
 
 ### `ParameterQuery.path( p )`
 
-Sets the path name not be queried. Returns a reference to the `ParameterQuery`
-instance.
+Sets the path name not be queried.
+
+Returns a reference to the `ParameterQuery` instance.
 
 ### `ParameterQuery.named( name )`
 
-Sets the name or names (if an array) to be queried. Returns a reference to the
-`ParameterQuery` instance.
+Sets the name or names (if an array) to be queried.
+
+Returns a reference to the `ParameterQuery` instance.
 
 ### `ParameterQuery.decryption( enabled = true )`
 
-Indicates that the decryption of the values is enabled/disabled. Returns a
-reference to the `ParameterQuery` instance.
+Indicates that the decryption of the values is enabled/disabled.
+
+Returns a reference to the `ParameterQuery` instance.
 
 ### `ParameterQuery.recursive( enabled = true )`
 
 Enables or disables recursive operations when resolving parameters by path.
+
 Returns a reference to the `ParameterQuery` instance.
 
-### `ParameterQuery.execute()`
+### `ParameterQuery.overwrite( enabled = true )`
 
-Executes the query based on path or name(s) that were selected. Returns a Promise
-that resolves the parameter results.
+Enables or disables overwrite for put operations.
+
+Returns a reference to the `ParameterQuery` instance.
+
+### `ParameterQuery.type( type = 'SecureString' )`
+
+Sets the parameter type for put operations. Valid values are `String`,
+`StringList`, and `SecureString`.
+
+Returns a reference to the `ParameterQuery` instance.
+
+### `async ParameterQuery.execute()`
+
+Executes the query based on path or name(s) that were selected.
+
+Returns a Promise that resolves the parameter results.
 
 ### `ParameterQuery.executeSync()`
 
 Executes the query based on path or name(s) that were selected. This operation
 will block until complete.
-
 
 ## Feedback
 
