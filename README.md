@@ -73,6 +73,17 @@ awsParamStore.getParameter( '/project1/my-parameter', { region: 'us-east-1' } )
     });
 ```
 
+The `parameter` info object will have properties similiar to the following:
+
+`{
+  Name: '/project1/my-parameter',
+  Type: 'String',
+  Value: 'your value',
+  Version: 1,
+  LastModifiedDate: 2020-02-18T18:17:08.229Z,
+  ARN: 'arn:aws:ssm:us-east-1:000000000000:parameter/project1/my-parameter'
+}`
+
 ### `getParameterSync( name [, options] )`
 
 Gets a parameter by name. This method will block until the operation completes.
@@ -211,7 +222,6 @@ that resolves the parameter results.
 
 Executes the query based on path or name(s) that were selected. This operation
 will block until complete.
-
 
 ## Feedback
 
