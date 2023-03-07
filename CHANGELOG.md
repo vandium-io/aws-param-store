@@ -1,5 +1,10 @@
 # Change Log
 
+## 4.0.0 (2023-04-07
+
+* aws-sdk updated to version 3, with a dependency only on `@aws-sdk/client-ssm`, instead of using a peer dependency.
+
+
 ## 3.2.0 (2019-12-04)
 
 Updated:
