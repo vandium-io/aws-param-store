@@ -1,6 +1,6 @@
 {
   "name": "aws-param-store-sdkv3",
-  "version": "4.0.0.",
+  "version": "4.0.0",
   "description": "Library for loading parameters from AWS Parameter Store, forked from aws-param-store to use the awsdkv3",
   "keywords": [
     "AWS",
