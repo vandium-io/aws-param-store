@@ -12,21 +12,29 @@ describe( 'lib/ssm', function() {
 
     let SSM;
 
-    let AWSStub;
     let SSMStub;
+    let AWSv3Stub;
+    let SSMClientStub;
+    let GetParameterCommandStub;
+    let PutParameterCommandStub;
+    let GetParametersCommandStub;
+    let GetParametersByPathCommandStub;
 
     beforeEach( function() {
 
         SSMStub = {};
+        SSMClientStub = {};
 
-        AWSStub = {
-
-            SSM: sinon.stub().returns( SSMStub )
+        AWSv3Stub = {
+            SSMClient: sinon.stub().returns( SSMClientStub ),
+            GetParameterCommand: sinon.stub(),
+            PutParameterCommand: sinon.stub(),
+            GetParametersCommand: sinon.stub(),
+            GetParametersByPathCommand: sinon.stub(),
         };
 
         SSM = proxyquire( '../../lib/ssm', {
-
-            'aws-sdk': AWSStub
+            '@aws-sdk/client-ssm': AWSv3Stub
         });
     });
 
@@ -39,9 +47,9 @@ describe( 'lib/ssm', function() {
                 let instance = new SSM();
 
                 expect( instance ).to.exist;
-                expect( AWSStub.SSM.calledOnce ).to.be.true;
-                expect( AWSStub.SSM.calledWithNew() ).to.be.true;
-                expect( AWSStub.SSM.firstCall.args ).to.eql( [ undefined ] );
+                expect( AWSv3Stub.SSMClient.calledOnce ).to.be.true;
+                expect( AWSv3Stub.SSMClient.calledWithNew() ).to.be.true;
+                expect( AWSv3Stub.SSMClient.firstCall.args ).to.eql( [ undefined ] );
             });
 
             it( 'with options', function() {
@@ -49,17 +57,16 @@ describe( 'lib/ssm', function() {
                 let instance = new SSM( { region: 'us-east-1' } );
 
                 expect( instance ).to.exist;
-                expect( AWSStub.SSM.calledOnce ).to.be.true;
-                expect( AWSStub.SSM.calledWithNew() ).to.be.true;
-                expect( AWSStub.SSM.firstCall.args ).to.eql( [ { region: 'us-east-1' } ] );
+                expect( AWSv3Stub.SSMClient.calledOnce ).to.be.true;
+                expect( AWSv3Stub.SSMClient.calledWithNew() ).to.be.true;
+                expect( AWSv3Stub.SSMClient.firstCall.args ).to.eql( [ { region: 'us-east-1' } ] );
             });
         });
 
         describe( '.getParametersByPath', function() {
 
             beforeEach( function() {
-
-                SSMStub.getParametersByPath = sinon.stub();
+                SSMClientStub.send = sinon.stub();
             });
 
             it( 'normal operation', function() {
@@ -72,10 +79,7 @@ describe( 'lib/ssm', function() {
                     ]
                 };
 
-                SSMStub.getParametersByPath.returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response ) )
-                });
+                SSMClientStub.send.returns( Promise.resolve(response) );
 
                 let instance = new SSM();
 
@@ -85,8 +89,10 @@ describe( 'lib/ssm', function() {
                         expect( parameters ).to.not.equal( response.Parameters );
                         expect( parameters ).to.eql( response.Parameters );
 
-                        expect( SSMStub.getParametersByPath.calledOnce ).to.be.true;
-                        expect( SSMStub.getParametersByPath.firstCall.args ).to.eql( [ { Path: '/' } ] );
+                        expect( SSMClientStub.send.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.GetParametersByPathCommand.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.GetParametersByPathCommand.calledWithNew() ).to.be.true;
+                        expect( AWSv3Stub.GetParametersByPathCommand.firstCall.args ).to.eql( [ { Path: '/' } ] );
                     });
             });
 
@@ -98,7 +104,7 @@ describe( 'lib/ssm', function() {
 
                         { Name: 'Param1' }
                     ],
-                    NextToken: 'Param2'
+                    NextToken: 'SomeToken'
                 };
 
                 let response2 = {
@@ -108,16 +114,8 @@ describe( 'lib/ssm', function() {
                         { Name: 'Param2' }
                     ]
                 };
-
-                SSMStub.getParametersByPath.onCall( 0 ).returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response1 ) )
-                });
-
-                SSMStub.getParametersByPath.onCall( 1 ).returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response2 ) )
-                });
+                SSMClientStub.send.onCall(0).returns( Promise.resolve(response1) );
+                SSMClientStub.send.onCall(1).returns( Promise.resolve(response2) );
 
                 let instance = new SSM();
 
@@ -126,9 +124,10 @@ describe( 'lib/ssm', function() {
 
                         expect( parameters ).to.eql( [ { Name: 'Param1' }, { Name: 'Param2' } ] );
 
-                        expect( SSMStub.getParametersByPath.calledTwice ).to.be.true;
-                        expect( SSMStub.getParametersByPath.firstCall.args ).to.eql( [ { Path: '/' } ] );
-                        expect( SSMStub.getParametersByPath.secondCall.args ).to.eql( [ { Path: '/', NextToken: 'Param2' } ] );
+                        expect( SSMClientStub.send.calledTwice ).to.be.true;
+                        expect( AWSv3Stub.GetParametersByPathCommand.calledTwice ).to.be.true;
+                        expect( AWSv3Stub.GetParametersByPathCommand.firstCall.args ).to.eql( [ { Path: '/' } ] );
+                        expect( AWSv3Stub.GetParametersByPathCommand.secondCall.args ).to.eql( [ { Path: '/', NextToken: 'SomeToken' } ] );
                     });
             });
 
@@ -136,10 +135,7 @@ describe( 'lib/ssm', function() {
 
                 let response = {};
 
-                SSMStub.getParametersByPath.returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response ) )
-                });
+                SSMClientStub.send.returns( Promise.resolve(response) );
 
                 let instance = new SSM();
 
@@ -148,8 +144,9 @@ describe( 'lib/ssm', function() {
 
                         expect( parameters ).to.eql( [] );
 
-                        expect( SSMStub.getParametersByPath.calledOnce ).to.be.true;
-                        expect( SSMStub.getParametersByPath.firstCall.args ).to.eql( [ { Path: '/' } ] );
+                        expect( SSMClientStub.send.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.GetParametersByPathCommand.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.GetParametersByPathCommand.firstCall.args ).to.eql( [ { Path: '/' } ] );
                     });
             });
         });
@@ -157,8 +154,7 @@ describe( 'lib/ssm', function() {
         describe( '.getParameter', function() {
 
             beforeEach( function() {
-
-                SSMStub.getParameter = sinon.stub();
+                SSMClientStub.send = sinon.stub();
             });
 
             it( 'normal operation', function() {
@@ -168,20 +164,17 @@ describe( 'lib/ssm', function() {
                     Parameter: { Name: 'Param1' }
                 };
 
-                SSMStub.getParameter.returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response ) )
-                });
+                SSMClientStub.send.returns( Promise.resolve(response) );
 
                 let instance = new SSM();
 
                 return instance.getParameter( { Name: 'Param1' } )
                     .then( (parameter) => {
 
-                        expect( parameter ).to.equal( response.Parameter );
+                        expect( parameter.Name ).to.equal( response.Parameter.Name );
 
-                        expect( SSMStub.getParameter.calledOnce ).to.be.true;
-                        expect( SSMStub.getParameter.firstCall.args ).to.eql( [ { Name: 'Param1' } ] );
+                        expect( AWSv3Stub.GetParameterCommand.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.GetParameterCommand.firstCall.args ).to.eql( [ { Name: 'Param1' } ] );
                     });
             });
         });
@@ -189,8 +182,7 @@ describe( 'lib/ssm', function() {
         describe( '.getParameters', function() {
 
             beforeEach( function() {
-
-                SSMStub.getParameters = sinon.stub();
+                SSMClientStub.send = sinon.stub();
             });
 
             it( 'normal operation', function() {
@@ -201,21 +193,17 @@ describe( 'lib/ssm', function() {
                     InvalidParameters: [ 'Param2' ]
                 };
 
-                SSMStub.getParameters.returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response ) )
-                });
+                SSMClientStub.send.returns( Promise.resolve(response) );
 
                 let instance = new SSM();
 
                 return instance.getParameters( { Names: [ 'Param1', 'Param2' ] } )
                     .then( (results) => {
 
-                        expect( results ).to.not.equal( response );
                         expect( results ).to.eql( response );
 
-                        expect( SSMStub.getParameters.calledOnce ).to.be.true;
-                        expect( SSMStub.getParameters.firstCall.args ).to.eql( [ { Names: [ 'Param1', 'Param2' ] } ] );
+                        expect( AWSv3Stub.GetParametersCommand.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.GetParametersCommand.firstCall.args ).to.eql( [ { Names: [ 'Param1', 'Param2' ] } ] );
                     });
             });
         });
@@ -223,8 +211,7 @@ describe( 'lib/ssm', function() {
         describe( '.putParameter', function() {
 
             beforeEach( function() {
-
-                SSMStub.putParameter = sinon.stub();
+                SSMClientStub.send = sinon.stub();
             });
 
             it( 'normal operation (type default: SecuredString) ', function() {
@@ -234,19 +221,16 @@ describe( 'lib/ssm', function() {
                     Version: 1
                 };
 
-                SSMStub.putParameter.returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response ) )
-                });
+                SSMClientStub.send.returns( Promise.resolve(response) );
 
                 let instance = new SSM();
 
-                return instance.putParameter( { Name: 'Param1', Value: 'Value1' } )
+                return instance.putParameter( { Name: 'Param1', Value: 'Value1'} )
                     .then( (return_data) => {
-                        expect(return_data).to.eql(response)
+                        expect(return_data).to.eql(response);
 
-                        expect( SSMStub.putParameter.calledOnce ).to.be.true;
-                        expect( SSMStub.putParameter.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1' } ] );
+                        expect( AWSv3Stub.PutParameterCommand.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.PutParameterCommand.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1' } ] );
                     });
             });
 
@@ -257,10 +241,7 @@ describe( 'lib/ssm', function() {
                     Version: 1
                 };
 
-                SSMStub.putParameter.returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response ) )
-                });
+                SSMClientStub.send.returns( Promise.resolve(response) );
 
                 let instance = new SSM();
 
@@ -268,8 +249,8 @@ describe( 'lib/ssm', function() {
                     .then( (return_data) => {
                         expect(return_data).to.eql(response)
 
-                        expect( SSMStub.putParameter.calledOnce ).to.be.true;
-                        expect( SSMStub.putParameter.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1', Type: 'String' } ] );
+                        expect( AWSv3Stub.PutParameterCommand.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.PutParameterCommand.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1', Type: 'String' } ] );
                     });
             });
 
@@ -280,10 +261,7 @@ describe( 'lib/ssm', function() {
                     Version: 1
                 };
 
-                SSMStub.putParameter.returns( {
-
-                    promise: sinon.stub().returns( Promise.resolve( response ) )
-                });
+                SSMClientStub.send.returns( Promise.resolve(response) );
 
                 let instance = new SSM();
 
@@ -291,8 +269,8 @@ describe( 'lib/ssm', function() {
                     .then( (return_data) => {
                         expect(return_data).to.eql(response)
 
-                        expect( SSMStub.putParameter.calledOnce ).to.be.true;
-                        expect( SSMStub.putParameter.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1,Value2', Type: 'StringList' } ] );
+                        expect( AWSv3Stub.PutParameterCommand.calledOnce ).to.be.true;
+                        expect( AWSv3Stub.PutParameterCommand.firstCall.args ).to.eql( [ { Name: 'Param1', Value: 'Value1,Value2', Type: 'StringList' } ] );
                     });
             });
 
