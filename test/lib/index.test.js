@@ -285,11 +285,11 @@ describe( 'lib/index', function() {
 
         it( 'name only', function() {
 
-            return index.putParameter( '/my-parameter', 'my-value', 'String')
+            return index.putParameter( '/my-parameter', 'my-value', 'String', {Overwrite:true})
                 .then( (results) => {
 
                     expect( ParameterQueryStub.calledOnce ).to.be.true;
-                    expect( ParameterQueryStub.firstCall.args ).to.eql( [ undefined ] );
+                    expect( ParameterQueryStub.firstCall.args ).to.eql( [ {Overwrite:true} ] );
 
                     expect( ParameterQueryInstance.put.calledOnce ).to.be.true;
                     expect( ParameterQueryInstance.withValue.calledOnce ).to.be.true;
@@ -318,10 +318,10 @@ describe( 'lib/index', function() {
 
         it( 'name only', function() {
 
-            let results = index.putParameterSync( '/my-parameter', 'my-value', 'String');
+            let results = index.putParameterSync( '/my-parameter', 'my-value', 'String', {Overwrite:true});
 
             expect( ParameterQueryStub.calledOnce ).to.be.true;
-            expect( ParameterQueryStub.firstCall.args ).to.eql( [ undefined ] );
+            expect( ParameterQueryStub.firstCall.args ).to.eql( [ {Overwrite:true} ] );
 
             expect( ParameterQueryInstance.put.calledOnce ).to.be.true;
             expect( ParameterQueryInstance.withValue.calledOnce ).to.be.true;

@@ -1,9 +1,10 @@
-[![Build Status](https://travis-ci.org/vandium-io/aws-param-store.svg?branch=master)](https://travis-ci.org/vandium-io/aws-param-store)
-[![npm version](https://badge.fury.io/js/aws-param-store.svg)](https://badge.fury.io/js/aws-param-store)
+[![npm version](https://badge.fury.io/js/aws-param-store-sdkv3.svg)](https://badge.fury.io/js/aws-param-store-sdkv3)
 
 # aws-param-store
 
 Module for loading parameter-store values from AWS SSM
+
+Now updated to use the AWS SDK v3, only requiring the SSMClient module.
 
 ## Features
 * Gets parameters by name(s) or path
@@ -12,21 +13,18 @@ Module for loading parameter-store values from AWS SSM
 * Supports both synchronous and asynchronous querying of parameters
 * Uses Promises for asynchronous calls
 * Can run inside AWS Lambda environment
-* AWS Lambda Node.js 8.10.x compatible
 * Lightweight and does not require additional dependencies other than the AWS-SDK
 
 
 ## Installation
 Install via npm.
 
-	npm install aws-param-store --save
-
-**Note**: `aws-param-store` does not contain a dependency on `aws-sdk` and it should be installed within your application.
+	npm install aws-param-store-sdkv3 --save
 
 ## Getting Started
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 awsParamStore.getParametersByPath( '/project1/service1/production' )
     .then( (parameters) => {
@@ -39,7 +37,7 @@ If your AWS region is not set in your environment variables, then it can be set 
 options when calling `newQuery()`:
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 awsParamStore.getParametersByPath( '/project1/service1/production', { region: 'us-east-1' } )
     .then( (parameters) => {
@@ -64,7 +62,7 @@ further control, please use the `parameterQuery()` method.
 Gets a parameter by name. This method returns a promise that resolves the Parameter.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 awsParamStore.getParameter( '/project1/my-parameter', { region: 'us-east-1' } )
     .then( (parameter) => {
@@ -78,7 +76,7 @@ awsParamStore.getParameter( '/project1/my-parameter', { region: 'us-east-1' } )
 Gets a parameter by name. This method will block until the operation completes.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 let parameter = awsParamStore.getParameterSync( '/project1/my-parameter',
 											{ region: 'us-east-1' } );
@@ -93,7 +91,7 @@ Gets one or more parameters by name. This method returns a promise that resolves
 an object that contains `Parameters` and `InvalidParameters`.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 awsParamStore.getParameters( ['/project1/my-parameter1', '/project1/my-parameter2'],
 							 { region: 'us-east-1' } )
@@ -112,7 +110,7 @@ block until the operation completes, and will return an object that contains
 `Parameters` and `InvalidParameters`.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 let results = awsParamStore.getParametersSync( ['/project1/my-parameter1', '/project1/my-parameter2'],
 							     			   { region: 'us-east-1' } );
@@ -128,7 +126,7 @@ Gets parameters by recursively traversing the supplied path. This method returns
 a promise that resolves the parameters that were found.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 awsParamStore.getParametersByPath( '/project1' )
     .then( (parameters) => {
@@ -144,7 +142,7 @@ block until the operation completes, and will return a list of matching
 parameters.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 let parameters = awsParamStore.getParametersByPathSync( '/project1' );
 
@@ -156,7 +154,7 @@ let parameters = awsParamStore.getParametersByPathSync( '/project1' );
 Puts parameter. This method returns a promise that resolves to the version returned back.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 awsParamStore.putParameter('key', 'value1,value2', 'StringList', {region: 'us-east-1', Overwrite: false})
     .then( (results) => {
@@ -170,7 +168,7 @@ awsParamStore.putParameter('key', 'value1,value2', 'StringList', {region: 'us-ea
 Puts parameter. This method.  This method will block until the version returned back.
 
 ```js
-const awsParamStore = require( 'aws-param-store' );
+const awsParamStore = require( 'aws-param-store-sdkv3' );
 
 let results = awsParamStore.putParameterSync('key', 'securedstring', 'SecureString', {region: 'us-east-1'});
 
@@ -212,11 +210,6 @@ that resolves the parameter results.
 Executes the query based on path or name(s) that were selected. This operation
 will block until complete.
 
-
-## Feedback
-
-We'd love to get feedback on how to make this tool better. Feel free to contact
-us at `feedback@vandium.io`
 
 ## License
 
